@@ -1,0 +1,20 @@
+{
+  "name": "Cheevos-bot",
+  "version": "1.0.0",
+  "description": "Cheevos bot for Captain at Sheeps Wool Harbor",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.5.1",
+    "dotenv": "^8.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.3"
+  }
+}
