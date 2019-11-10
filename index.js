@@ -128,6 +128,48 @@ function addData(auth, score, name) {
   });
 }
 
+function removeData(auth, score, name) {
+  var resource;
+  var loc = 2;
+  const sheets = google.sheets({version: 'v4', auth});
+
+  sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: 'Sheet1!A2:B',
+  }, (err, res) => {
+    if (err) return console.log('The API returned an error: ' + err);
+    const nameList = res.data.values;
+    for (var i = 0; i < nameList.length; i++) {
+      if (nameList[i][0] == name) {
+        loc += i;
+        if (parseInt(nameList[i][1]) - score < 0){
+          score = 0;
+        }
+        else {
+          score = parseInt(nameList[i][1]) - score;
+        }
+        let value = score;
+        let values = [[value]]
+        resource = {values};
+      }
+      console.log(nameList[i]);
+    }
+    setTimeout(function(){
+      var rangeWrite = 'sheet1!B' + loc.toString();
+      console.log(rangeWrite);
+      sheets.spreadsheets.values.update({
+        spreadsheetId,
+        range: rangeWrite,
+        valueInputOption: 'USER_ENTERED',
+        resource,
+      }, (err) => {
+        if (err) return console.log('The API returned an error: ' + err);
+      });
+    }, 1000);
+
+  });
+}
+
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`)
   fs.readFile('credentials.json', (err, content) => {
@@ -179,6 +221,15 @@ client.on('message', msg => {
       authorizeWrite(JSON.parse(content), addData, parseInt(parts[2]), parts[4]);
     });
   }
+
+  if (parts[1] === 'subtract' && parts[2] != null 
+  && parts[3] === 'to' && parts[4] != null) {
+  fs.readFile('credentials.json', (err, content) => {
+    if (err) return console.log('Error loading client secret file:', err);
+    // Authorize a client with credentials, then call the Google Sheets API.
+    authorizeWrite(JSON.parse(content), removeData, parseInt(parts[2]), parts[4]);
+  });
+}
 
 })
 
