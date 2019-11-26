@@ -1,3 +1,19 @@
+# dependencies
+/node_modules
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Personal
 .env
 credentials.json
 token.json
+
+# System Files
+.DS_Store
+Thumbs.db
