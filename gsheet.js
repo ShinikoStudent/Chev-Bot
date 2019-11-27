@@ -61,7 +61,7 @@ function getNewToken(oAuth2Client, callback) {
   });
 }
 
-module.exports.authorizeWrite = function authorizeWrite(credentials, callback, val1, val2) {
+module.exports.authorizeScoreChange = function authorizeScoreChange(credentials, callback, val1, val2) {
   const {client_secret, client_id, redirect_uris} = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
       client_id, client_secret, redirect_uris[0]);
@@ -71,5 +71,18 @@ module.exports.authorizeWrite = function authorizeWrite(credentials, callback, v
     if (err) return getNewToken(oAuth2Client, callback);
     oAuth2Client.setCredentials(JSON.parse(token));
     callback(oAuth2Client, val1, val2);
+  });
+}
+
+module.exports.authorizeMemberChange = function authorizeMemberChange(credentials, callback, val1) {
+  const {client_secret, client_id, redirect_uris} = credentials.installed;
+  const oAuth2Client = new google.auth.OAuth2(
+      client_id, client_secret, redirect_uris[0]);
+
+  // Check if we have previously stored a token.
+  fs.readFile(TOKEN_PATH, (err, token) => {
+    if (err) return getNewToken(oAuth2Client, callback);
+    oAuth2Client.setCredentials(JSON.parse(token));
+    callback(oAuth2Client, val1);
   });
 }
