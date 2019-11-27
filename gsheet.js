@@ -1,16 +1,23 @@
 const readline = require('readline');
 const {google} = require('googleapis');
+const fs = require('fs');
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const TOKEN_PATH = 'token.json';
 
-const spreadsheetId = '1MB34CSHSSnm9MFLXTdXqcGuqGTIK4ijEngyUhX7bLIs';
+const spreadsheetId = '12RPFurxrfseNxVfm2y5j_uL4oUtMlb4GpzC5r5L2kZ4';
+
+
+module.exports = {
+  google: google,
+  spreadsheetId: spreadsheetId,
+}
 
 /*
  * Create an OAuth2 client with the given credentials, and then execute the
  * given callback function.
  */
-exports.authorize = function authorize(credentials, callback) {
+module.exports.authorize = function authorize(credentials, callback) {
   const {client_secret, client_id, redirect_uris} = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
       client_id, client_secret, redirect_uris[0]);
@@ -54,7 +61,7 @@ function getNewToken(oAuth2Client, callback) {
   });
 }
 
-exports.authorizeWrite = function authorizeWrite(credentials, callback, val1, val2) {
+module.exports.authorizeWrite = function authorizeWrite(credentials, callback, val1, val2) {
   const {client_secret, client_id, redirect_uris} = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
       client_id, client_secret, redirect_uris[0]);

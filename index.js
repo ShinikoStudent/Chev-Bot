@@ -3,6 +3,9 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
 
+var google = require('./gsheet').google;
+var spreadsheetId = require('./gsheet').spreadsheetId;
+
 var authorize = require('./gsheet.js').authorize;
 var authorizeWrite = require('./gsheet').authorizeWrite;
 
@@ -17,7 +20,7 @@ function getData(auth) {
   const sheets = google.sheets({version: 'v4', auth});
   sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: 'Sheet1!A1:B',
+    range: 'Peeps!A1:B',
   }, (err, res) => {
     if (err) return console.log('The API returned an error: ' + err);
     const rows = res.data.values;
@@ -26,14 +29,14 @@ function getData(auth) {
   });
 }
 
-function addData(auth, score, name) {
+function addScore(auth, score, name) {
   var resource;
   var loc = 2;
   const sheets = google.sheets({version: 'v4', auth});
 
   sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: 'Sheet1!A2:B',
+    range: 'Peeps!A2:B',
   }, (err, res) => {
     if (err) return console.log('The API returned an error: ' + err);
     const nameList = res.data.values;
@@ -45,11 +48,9 @@ function addData(auth, score, name) {
         let values = [[value]]
         resource = {values};
       }
-      console.log(nameList[i]);
     }
     setTimeout(function(){
-      console.log("this is resource:", resource);
-      var rangeWrite = 'sheet1!B' + loc.toString();
+      var rangeWrite = 'Peeps!B' + loc.toString();
       console.log(rangeWrite);
       sheets.spreadsheets.values.update({
         spreadsheetId,
@@ -64,14 +65,14 @@ function addData(auth, score, name) {
   });
 }
 
-function removeData(auth, score, name) {
+function subtractScore(auth, score, name) {
   var resource;
   var loc = 2;
   const sheets = google.sheets({version: 'v4', auth});
 
   sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: 'Sheet1!A2:B',
+    range: 'Peeps!A2:B',
   }, (err, res) => {
     if (err) return console.log('The API returned an error: ' + err);
     const nameList = res.data.values;
@@ -91,7 +92,7 @@ function removeData(auth, score, name) {
       console.log(nameList[i]);
     }
     setTimeout(function(){
-      var rangeWrite = 'sheet1!B' + loc.toString();
+      var rangeWrite = 'Peeps!B' + loc.toString();
       console.log(rangeWrite);
       sheets.spreadsheets.values.update({
         spreadsheetId,
@@ -113,6 +114,7 @@ client.on('ready', () => {
     // Authorize a client with credentials, then call the Google Sheets API.
     authorize(JSON.parse(content), getData);
   });
+  
 })
 
 client.on('message', msg => {
@@ -120,7 +122,8 @@ client.on('message', msg => {
   const parts = content.split(' ');
 
   if (parts[0] != PREFIX){ return; }
-  if (parts.length === 1){ msg.reply("Yes? I hear thy name calling!"); }
+  if (parts.length === 1){ msg.reply("Yes?!!!! I hear thy name calling!"); }
+
   if (msg.content === 'chev list') {
     // Load client secrets from a local file.
     fs.readFile('credentials.json', (err, content) => {
@@ -154,7 +157,7 @@ client.on('message', msg => {
     fs.readFile('credentials.json', (err, content) => {
       if (err) return console.log('Error loading client secret file:', err);
       // Authorize a client with credentials, then call the Google Sheets API.
-      authorizeWrite(JSON.parse(content), addData, parseInt(parts[2]), parts[4]);
+      authorizeWrite(JSON.parse(content), addScore, parseInt(parts[2]), parts[4]);
     });
   }
 
@@ -163,7 +166,7 @@ client.on('message', msg => {
   fs.readFile('credentials.json', (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Sheets API.
-    authorizeWrite(JSON.parse(content), removeData, parseInt(parts[2]), parts[4]);
+    authorizeWrite(JSON.parse(content), subtractScore, parseInt(parts[2]), parts[4]);
   });
 }
 
