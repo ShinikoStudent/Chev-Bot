@@ -46,7 +46,7 @@ function addScore(auth, score, name) {
         loc += i;
         score += parseInt(nameList[i][1]);
         let value = score;
-        let values = [[value]]
+        let values = [[value]];
         resource = {values};
       }
     }
@@ -208,7 +208,7 @@ client.on('message', msg => {
   if (parts[0] != PREFIX){ return; }
   if (parts.length === 1){ msg.reply("Yes?!!!! I hear thy name calling!"); }
 
-  if (msg.content === 'chev list') {
+  if (msg.content === 'chev list scores') {
     // Load client secrets from a local file.
     fs.readFile('credentials.json', (err, content) => {
       if (err) return console.log('Error loading client secret file:', err);
