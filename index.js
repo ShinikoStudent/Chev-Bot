@@ -9,7 +9,7 @@ client.commands = new Discord.Collection();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
-for (const file of commandFiles) {
+for (const file of commandFiles) { // Setup each command for client
   const command = require(`./commands/${file}`);
   client.commands.set(command.name, command);
 }
@@ -17,6 +17,15 @@ for (const file of commandFiles) {
 client.once('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`)
 });
+
+/*
+* Todo:
+* - Can buy from store (subtract points from themselves)
+* - People can buy emotes in exchange for points
+* - Once 3 people have purchased an emote, then its available for everyone
+* - Sassy responses for anyone who tries to abuse the system
+* - Be able to add new cheevos names
+*/
 
 client.on('message', msg => {
   const content = msg.content;

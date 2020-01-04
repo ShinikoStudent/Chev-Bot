@@ -5,7 +5,7 @@ var spreadsheetId = require('../gsheet').spreadsheetId;
 
 module.exports = {
   name: 'addMember',
-  description: 'Grab data from google sheets',
+  description: 'Add a new member from Discord',
   execute(message, name) {
     fs.readFile('credentials.json', (err, content) => {
       if (err) return console.log('Error loading client secret file:', err);
